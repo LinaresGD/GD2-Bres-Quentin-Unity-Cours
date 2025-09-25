@@ -9,10 +9,21 @@ public class UIController : MonoBehaviour
     {
         UpdateScore(0);
     }
-
+    
     public void UpdateScore(int NewScore)
     {
         _scoreText.text = "Score : " + NewScore.ToString();
         //  _scoreText.text = $"Score : {NewScore.ToString()}; methode plus sur
     }
-}
+
+
+    private void OnEnable()
+    {
+       Player_Collect.OnTargetCollected += UpdateScore; 
+    }
+
+    private void OnDisable()
+    {
+        Player_Collect.OnTargetCollected -= UpdateScore;
+    }
+}    
