@@ -1511,7 +1511,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2824069114287827688, guid: 9988dc32b79930e42a8b86923e650fa3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.96817726
+      value: 11.97
       objectReference: {fileID: 0}
     - target: {fileID: 2824069114287827688, guid: 9988dc32b79930e42a8b86923e650fa3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1782,6 +1782,14 @@ PrefabInstance:
     - target: {fileID: 1270646715168456665, guid: a68d376821d26d140ac46cda58b1dd40, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4906227353900122100, guid: a68d376821d26d140ac46cda58b1dd40, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -840
+      objectReference: {fileID: 0}
+    - target: {fileID: 4906227353900122100, guid: a68d376821d26d140ac46cda58b1dd40, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 419
       objectReference: {fileID: 0}
     - target: {fileID: 8768255367558324272, guid: a68d376821d26d140ac46cda58b1dd40, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
