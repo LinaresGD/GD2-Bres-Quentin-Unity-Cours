@@ -9,12 +9,12 @@ public class LevelManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L))
         {
-            LoadANewLevel(buildIndex:1);
+            LoadANewLevel(buildIndex:"Level_1");
         }
         
     }
 
-    public void LoadANewLevel(int buildIndex)
+    public void LoadANewLevel(string buildIndex)
     {
         SceneManager.LoadScene(buildIndex);
     }
