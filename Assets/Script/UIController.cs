@@ -1,29 +1,28 @@
 using System;
 using UnityEngine;
 using TMPro;
+
 public class UIController : MonoBehaviour
 {
-    [SerializeField] private TMP_Text _scoreText;
+    [SerializeField] private TMP_Text _crystalCountText;
 
     private void Start()
     {
-        UpdateScore(0);
-    }
-    
-    public void UpdateScore(int NewScore)
-    {
-        _scoreText.text = "Score : " + NewScore.ToString();
-        //  _scoreText.text = $"Score : {NewScore.ToString()}; methode plus sur
+        UpdateCrystalCount(0, 3);
     }
 
+    public void UpdateCrystalCount(int current, int needed)
+    {
+        _crystalCountText.text = $"Cristaux : {current}/{needed}";
+    }
 
     private void OnEnable()
     {
-       Player_Collect.OnTargetCollected += UpdateScore; 
+        Player_Collect.OnCrystalCountChanged += UpdateCrystalCount;
     }
 
     private void OnDisable()
     {
-        Player_Collect.OnTargetCollected -= UpdateScore;
+        Player_Collect.OnCrystalCountChanged -= UpdateCrystalCount;
     }
-}    
+}

@@ -1,46 +1,51 @@
-using System.Net.NetworkInformation;
 using UnityEngine;
+
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
-{   
+{
     private Rigidbody _rb;
     private float _horizontalMovement;
     private float _verticalMovement;
     private Vector3 _movement;
     private Vector3 _grappinDirection;
     private Vector3 _grappinHit;
+
     [SerializeField] private float _speed = 10f;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
-        
+        _rb.constraints = RigidbodyConstraints.FreezeRotation;
+        _rb.linearDamping = 5f;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        _horizontalMovement = Input.GetAxis("Horizontal");
-        _verticalMovement = Input.GetAxis("Vertical");
+        _horizontalMovement = 0f;
+        _verticalMovement = 0f;
+
+        if (Input.GetKey(KeyCode.Z))
+            _verticalMovement = 1f;
+
+        if (Input.GetKey(KeyCode.S))
+            _verticalMovement = -1f;
+
+        if (Input.GetKey(KeyCode.Q))
+            _horizontalMovement = -1f;
+
+        if (Input.GetKey(KeyCode.D))
+            _horizontalMovement = 1f;
+
         _movement = new Vector3(_horizontalMovement, 0, _verticalMovement);
-        GrappinUpdateDirection(_movement); //mise a jour direction grappin
-        _movement.Normalize();
-        _movement.y = _rb.linearVelocity.y;
-        if ( _rb != null)
+
+        if (_movement.sqrMagnitude > 0.1f)
         {
-            _rb.linearVelocity = _movement;
-            
-        }
-        else
-        {
-            Debug.LogError("no rigibody attached");
+            GrappinUpdateDirection(_movement);
         }
 
         if (Input.GetKeyDown(KeyCode.G))
         {
             TryThrowGrappin();
-            
         }
 
         if (Input.GetKeyUp(KeyCode.G))
@@ -49,8 +54,18 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    void FixedUpdate()
+    {
+        if (_rb != null)
+        {
+            Vector3 velocity = _movement.normalized * _speed;
+            velocity.y = _rb.linearVelocity.y;
+            _rb.linearVelocity = velocity;
+        }
+    }
+
     private void GrappinUpdateDirection(Vector3 direction)
-    {   
+    {
         if (direction.sqrMagnitude > 0.1f)
         {
             _grappinDirection = direction;
@@ -58,11 +73,11 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void TryThrowGrappin()
-    {   
+    {
         RaycastHit hit;
         if (Physics.Raycast(transform.position, _grappinDirection, out hit, 100f))
         {
-            _grappinHit = hit.point+hit.normal*1.5f;
+            _grappinHit = hit.point + hit.normal * 1.5f;
         }
     }
 
