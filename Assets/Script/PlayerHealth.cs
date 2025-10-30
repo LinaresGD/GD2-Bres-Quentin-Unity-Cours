@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] private Transform _respawnPoint;
+    [SerializeField] private Transform _spawnPoint;
+
     private Rigidbody _rb;
     private Vector3 _initialPosition;
 
@@ -10,9 +11,9 @@ public class PlayerHealth : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
 
-        if (_respawnPoint != null)
+        if (_spawnPoint != null)
         {
-            _initialPosition = _respawnPoint.position;
+            _initialPosition = _spawnPoint.position;
         }
         else
         {
@@ -22,6 +23,7 @@ public class PlayerHealth : MonoBehaviour
 
     public void Die()
     {
+        Debug.Log("Le joueur meurt !");
         Respawn();
     }
 
@@ -35,6 +37,6 @@ public class PlayerHealth : MonoBehaviour
             _rb.angularVelocity = Vector3.zero;
         }
 
-        Debug.Log("Player respawned!");
+        Debug.Log("Le joueur respawn !");
     }
 }

@@ -1,6 +1,5 @@
 using UnityEngine;
 using System;
-using UnityEngine.InputSystem.Controls;
 
 public class Player_Collect : MonoBehaviour
 {
@@ -56,7 +55,13 @@ public class Player_Collect : MonoBehaviour
     {
         _hasKey = true;
         OnKeyCollected?.Invoke();
-        Debug.Log("Clé collectée ! Vous pouvez maintenant ouvrir la porte/finir le niveau.");
+        Debug.Log("Clé collectée ! Le timer s'arrête.");
+
+        GameTimer gameTimer = FindFirstObjectByType<GameTimer>();
+        if (gameTimer != null)
+        {
+            gameTimer.StopTimer();
+        }
     }
 
     public bool HasKey()
@@ -64,4 +69,3 @@ public class Player_Collect : MonoBehaviour
         return _hasKey;
     }
 }
-
