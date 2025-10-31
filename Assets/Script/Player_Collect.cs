@@ -68,4 +68,18 @@ public class Player_Collect : MonoBehaviour
     {
         return _hasKey;
     }
+
+    public void ResetCrystals()
+    {
+        _crystalsCollected = 0;
+        _hasKey = false;
+
+        if (_keySphere != null)
+        {
+            _keySphere.SetActive(false);
+        }
+
+        OnCrystalCountChanged?.Invoke(_crystalsCollected, _crystalsNeeded);
+        Debug.Log("Cristaux réinitialisés à 0.");
+    }
 }

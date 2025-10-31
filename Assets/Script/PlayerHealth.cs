@@ -6,10 +6,12 @@ public class PlayerHealth : MonoBehaviour
 
     private Rigidbody _rb;
     private Vector3 _initialPosition;
+    private Player_Collect _playerCollect;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
+        _playerCollect = GetComponent<Player_Collect>();
 
         if (_spawnPoint != null)
         {
@@ -35,6 +37,11 @@ public class PlayerHealth : MonoBehaviour
         {
             _rb.linearVelocity = Vector3.zero;
             _rb.angularVelocity = Vector3.zero;
+        }
+
+        if (_playerCollect != null)
+        {
+            _playerCollect.ResetCrystals();
         }
 
         Debug.Log("Le joueur respawn !");
