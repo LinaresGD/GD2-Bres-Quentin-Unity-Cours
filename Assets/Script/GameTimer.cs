@@ -58,6 +58,12 @@ public class GameTimer : MonoBehaviour
         _isRunning = false;
     }
 
+    public void AddTime(float timeToAdd)
+    {
+        _timeRemaining += timeToAdd;
+        Debug.Log($"Temps ajouté ! Temps restant : {_timeRemaining:F1}s");
+    }
+
     public float GetTimeRemaining()
     {
         return _timeRemaining;

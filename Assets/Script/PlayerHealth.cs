@@ -7,11 +7,13 @@ public class PlayerHealth : MonoBehaviour
     private Rigidbody _rb;
     private Vector3 _initialPosition;
     private Player_Collect _playerCollect;
+    private GameTimer _gameTimer;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _playerCollect = GetComponent<Player_Collect>();
+        _gameTimer = FindFirstObjectByType<GameTimer>();
 
         if (_spawnPoint != null)
         {
@@ -42,6 +44,11 @@ public class PlayerHealth : MonoBehaviour
         if (_playerCollect != null)
         {
             _playerCollect.ResetCrystals();
+        }
+
+        if (_gameTimer != null)
+        {
+            _gameTimer.ResetTimer();
         }
 
         Debug.Log("Le joueur respawn !");
