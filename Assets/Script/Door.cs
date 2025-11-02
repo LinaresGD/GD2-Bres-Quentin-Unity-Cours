@@ -7,6 +7,8 @@ public class Door : MonoBehaviour
     [SerializeField] private float _openSpeed = 2f;
     [SerializeField] private Vector3 _openOffset = new Vector3(0, 5, 0);
     [SerializeField] private bool _requiresKey = true;
+    [SerializeField] private bool _showVictoryScreen = true;
+    [SerializeField] private float _victoryDelay = 1f;
 
     private bool _isOpen = false;
     private bool _playerNearby = false;
@@ -69,8 +71,21 @@ public class Door : MonoBehaviour
         {
             _isOpen = true;
             Debug.Log("La porte s'ouvre !");
-            Invoke(nameof(LoadNextLevel), 2f);
+
+            if (_showVictoryScreen)
+            {
+                Invoke(nameof(ShowVictory), _victoryDelay);
+            }
+            else
+            {
+                Invoke(nameof(LoadNextLevel), 2f);
+            }
         }
+    }
+
+    private void ShowVictory()
+    {
+        VictoryScreen.ShowVictory();
     }
 
     private void LoadNextLevel()
@@ -78,3 +93,4 @@ public class Door : MonoBehaviour
         SceneManager.LoadScene(_nextLevelName);
     }
 }
+
