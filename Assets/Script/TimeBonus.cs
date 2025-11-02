@@ -6,6 +6,10 @@ public class TimeBonus : MonoBehaviour
     [SerializeField] private float _bonusTime = 15f;
     [SerializeField] private float _rotationSpeed = 50f;
 
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip _collectSound;
+    [SerializeField] private float _soundVolume = 1f;
+
     private GameTimer _gameTimer;
 
     void Start()
@@ -31,6 +35,11 @@ public class TimeBonus : MonoBehaviour
             {
                 _gameTimer.AddTime(_bonusTime);
                 Debug.Log($"+{_bonusTime} secondes !");
+            }
+
+            if (_collectSound != null)
+            {
+                AudioSource.PlayClipAtPoint(_collectSound, transform.position, _soundVolume);
             }
 
             Destroy(gameObject);

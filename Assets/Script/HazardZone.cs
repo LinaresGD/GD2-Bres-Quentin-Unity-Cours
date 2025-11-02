@@ -13,20 +13,32 @@ public class HazardZone : MonoBehaviour
     [SerializeField] private Material _inactiveMaterial;
     [SerializeField] private Color _warningColor = Color.yellow;
     [SerializeField] private float _warningDuration = 1f;
+    [SerializeField] private float _blinkSpeed = 0.2f;
+
+    [Header("Audio Settings")]
+    [SerializeField] private AudioClip _warningSound;
+    [SerializeField] private float _warningSoundVolume = 1f;
 
     private MeshRenderer _renderer;
     private Collider _collider;
     private bool _isActive;
-    private Material _currentMaterial;
+    private Coroutine _blinkCoroutine;
 
     void Start()
     {
         _renderer = GetComponent<MeshRenderer>();
         _collider = GetComponent<Collider>();
 
-        if (_renderer != null)
+        if (_collider == null)
         {
-            _currentMaterial = _renderer.material;
+            Debug.LogError("HazardZone : Aucun Collider trouvé !");
+            return;
+        }
+
+        if (!_collider.isTrigger)
+        {
+            Debug.LogWarning("HazardZone : Le Collider n'est pas un Trigger ! Activation automatique...");
+            _collider.isTrigger = true;
         }
 
         _isActive = _startActive;
@@ -42,8 +54,7 @@ public class HazardZone : MonoBehaviour
                 ActivateHazard();
                 yield return new WaitForSeconds(_activeTime - _warningDuration);
 
-                ShowWarning();
-                yield return new WaitForSeconds(_warningDuration);
+                yield return StartCoroutine(ShowWarning());
 
                 _isActive = false;
             }
@@ -52,8 +63,7 @@ public class HazardZone : MonoBehaviour
                 DeactivateHazard();
                 yield return new WaitForSeconds(_inactiveTime - _warningDuration);
 
-                ShowWarning();
-                yield return new WaitForSeconds(_warningDuration);
+                yield return StartCoroutine(ShowWarning());
 
                 _isActive = true;
             }
@@ -62,6 +72,12 @@ public class HazardZone : MonoBehaviour
 
     private void ActivateHazard()
     {
+        if (_blinkCoroutine != null)
+        {
+            StopCoroutine(_blinkCoroutine);
+            _blinkCoroutine = null;
+        }
+
         if (_collider != null)
         {
             _collider.enabled = true;
@@ -75,10 +91,18 @@ public class HazardZone : MonoBehaviour
         {
             _renderer.material.color = Color.red;
         }
+
+        Debug.Log("HazardZone ACTIVÉE - DANGER !");
     }
 
     private void DeactivateHazard()
     {
+        if (_blinkCoroutine != null)
+        {
+            StopCoroutine(_blinkCoroutine);
+            _blinkCoroutine = null;
+        }
+
         if (_collider != null)
         {
             _collider.enabled = false;
@@ -92,17 +116,67 @@ public class HazardZone : MonoBehaviour
         {
             _renderer.material.color = Color.gray;
         }
+
+        Debug.Log("HazardZone DÉSACTIVÉE - Sécurisé");
     }
 
-    private void ShowWarning()
+    private IEnumerator ShowWarning()
     {
-        if (_renderer != null)
+        if (_warningSound != null)
         {
-            _renderer.material.color = _warningColor;
+            AudioSource.PlayClipAtPoint(_warningSound, transform.position, _warningSoundVolume);
+        }
+
+        Debug.Log("HazardZone : AVERTISSEMENT - Changement imminent !");
+
+        Color currentColor = _isActive ? Color.red : Color.gray;
+        float elapsed = 0f;
+
+        while (elapsed < _warningDuration)
+        {
+            if (_renderer != null)
+            {
+                _renderer.material.color = _warningColor;
+            }
+
+            yield return new WaitForSeconds(_blinkSpeed);
+
+            if (_renderer != null)
+            {
+                _renderer.material.color = currentColor;
+            }
+
+            yield return new WaitForSeconds(_blinkSpeed);
+
+            elapsed += _blinkSpeed * 2;
         }
     }
 
     void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"HazardZone : Collision détectée avec {other.gameObject.name} (Tag: {other.tag})");
+
+        if (_isActive && other.CompareTag("Player_C"))
+        {
+            Debug.Log("HazardZone : Le joueur touche la zone active - MORT !");
+
+            PlayerHealth playerHealth = other.GetComponent<PlayerHealth>();
+            if (playerHealth != null)
+            {
+                playerHealth.Die();
+            }
+            else
+            {
+                Debug.LogError("HazardZone : PlayerHealth non trouvé sur le joueur !");
+            }
+        }
+        else if (!_isActive)
+        {
+            Debug.Log("HazardZone : Zone inactive - Pas de dégâts");
+        }
+    }
+
+    void OnTriggerStay(Collider other)
     {
         if (_isActive && other.CompareTag("Player_C"))
         {
@@ -114,4 +188,3 @@ public class HazardZone : MonoBehaviour
         }
     }
 }
-
