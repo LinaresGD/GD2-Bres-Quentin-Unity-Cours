@@ -41,10 +41,12 @@ public class GameTimer : MonoBehaviour
 
         if (_playerHealth != null)
         {
-            _playerHealth.Die();
+            _playerHealth.DieByTimeout();
         }
-
-        ResetTimer();
+        else
+        {
+            GameOverScreen.ShowGameOver("Le temps est écoulé !");
+        }
     }
 
     public void ResetTimer()
