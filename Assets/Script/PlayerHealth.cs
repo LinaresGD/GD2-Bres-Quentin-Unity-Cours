@@ -51,6 +51,11 @@ public class PlayerHealth : MonoBehaviour
             _gameTimer.ResetTimer();
         }
 
+        if (CollectibleManager.Instance != null)
+        {
+            CollectibleManager.Instance.RespawnAllCollectibles();
+        }
+
         Debug.Log("Le joueur respawn !");
     }
 }

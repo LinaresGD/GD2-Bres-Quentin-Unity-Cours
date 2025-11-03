@@ -20,6 +20,11 @@ public class TimeBonus : MonoBehaviour
         {
             Debug.LogError("GameTimer non trouvé dans la scène !");
         }
+
+        if (CollectibleManager.Instance != null)
+        {
+            CollectibleManager.Instance.RegisterCollectible(gameObject);
+        }
     }
 
     void Update()
@@ -42,7 +47,7 @@ public class TimeBonus : MonoBehaviour
                 AudioSource.PlayClipAtPoint(_collectSound, transform.position, _soundVolume);
             }
 
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

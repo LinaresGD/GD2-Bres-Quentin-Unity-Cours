@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using TMPro;
 
 public class VictoryScreen : MonoBehaviour
@@ -13,7 +14,10 @@ public class VictoryScreen : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private string _victoryMessage = "YOU WIN!";
-    [SerializeField] private bool _freezeGameOnVictory = true;
+    [SerializeField] private bool _freezeGameOnVictory = false;
+    [SerializeField] private float _delayBeforeNextLevel = 3f;
+
+    private string _nextLevelName;
 
     void Awake()
     {
@@ -30,11 +34,11 @@ public class VictoryScreen : MonoBehaviour
         }
     }
 
-    public static void ShowVictory()
+    public static void ShowVictory(string nextLevelName = "")
     {
         if (_instance != null)
         {
-            _instance.DisplayVictory();
+            _instance.DisplayVictory(nextLevelName);
         }
         else
         {
@@ -42,7 +46,7 @@ public class VictoryScreen : MonoBehaviour
         }
     }
 
-    private void DisplayVictory()
+    private void DisplayVictory(string nextLevelName)
     {
         if (_victoryPanel != null)
         {
@@ -60,6 +64,19 @@ public class VictoryScreen : MonoBehaviour
         }
 
         Debug.Log("VICTOIRE !");
+
+        _nextLevelName = nextLevelName;
+
+        if (!string.IsNullOrEmpty(_nextLevelName))
+        {
+            Invoke(nameof(LoadNextLevel), _delayBeforeNextLevel);
+        }
+    }
+
+    private void LoadNextLevel()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(_nextLevelName);
     }
 
     public static void HideVictory()

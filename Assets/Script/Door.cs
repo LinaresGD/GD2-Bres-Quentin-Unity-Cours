@@ -1,13 +1,11 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Door : MonoBehaviour
 {
-    [SerializeField] private string _nextLevelName = "Level_2";
+    [SerializeField] private string _nextLevelName = "Level02";
     [SerializeField] private float _openSpeed = 2f;
     [SerializeField] private Vector3 _openOffset = new Vector3(0, 5, 0);
     [SerializeField] private bool _requiresKey = true;
-    [SerializeField] private bool _showVictoryScreen = true;
     [SerializeField] private float _victoryDelay = 1f;
 
     private bool _isOpen = false;
@@ -49,7 +47,7 @@ public class Door : MonoBehaviour
             _playerNearby = true;
             _playerCollect = other.GetComponent<Player_Collect>();
 
-            if (_requiresKey && !_playerCollect.HasKey())
+            if (_requiresKey && _playerCollect != null && !_playerCollect.HasKey())
             {
                 Debug.Log("Vous avez besoin de la clé pour ouvrir cette porte !");
             }
@@ -72,25 +70,12 @@ public class Door : MonoBehaviour
             _isOpen = true;
             Debug.Log("La porte s'ouvre !");
 
-            if (_showVictoryScreen)
-            {
-                Invoke(nameof(ShowVictory), _victoryDelay);
-            }
-            else
-            {
-                Invoke(nameof(LoadNextLevel), 2f);
-            }
+            Invoke(nameof(ShowVictory), _victoryDelay);
         }
     }
 
     private void ShowVictory()
     {
-        VictoryScreen.ShowVictory();
-    }
-
-    private void LoadNextLevel()
-    {
-        SceneManager.LoadScene(_nextLevelName);
+        VictoryScreen.ShowVictory(_nextLevelName);
     }
 }
-
