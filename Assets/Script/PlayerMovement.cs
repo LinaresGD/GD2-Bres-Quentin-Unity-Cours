@@ -24,13 +24,13 @@ public class PlayerMovement : MonoBehaviour
         _horizontalMovement = 0f;
         _verticalMovement = 0f;
 
-        if (Input.GetKey(KeyCode.Z))
+        if (Input.GetKey(KeyCode.W))
             _verticalMovement = 1f;
 
         if (Input.GetKey(KeyCode.S))
             _verticalMovement = -1f;
 
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.A))
             _horizontalMovement = -1f;
 
         if (Input.GetKey(KeyCode.D))
