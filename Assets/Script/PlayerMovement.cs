@@ -9,15 +9,17 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 _movement;
     private Vector3 _grappinDirection;
     private Vector3 _grappinHit;
+    private bool _isGrappling;
 
     [SerializeField] private float _speed = 10f;
+    [SerializeField] private float _grappinSpeed = 20f;
 
     void Start()
     {
         _rb = GetComponent<Rigidbody>();
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
         _rb.linearDamping = 5f;
-        _rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         _rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
@@ -60,9 +62,27 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_rb != null)
         {
-            Vector3 velocity = _movement.normalized * _speed;
-            velocity.y = _rb.linearVelocity.y;
-            _rb.linearVelocity = velocity;
+            if (_isGrappling)
+            {
+                Vector3 direction = (_grappinHit - transform.position).normalized;
+                float distance = Vector3.Distance(transform.position, _grappinHit);
+
+                if (distance > 0.5f)
+                {
+                    _rb.linearVelocity = direction * _grappinSpeed;
+                }
+                else
+                {
+                    _isGrappling = false;
+                    _rb.linearVelocity = Vector3.zero;
+                }
+            }
+            else
+            {
+                Vector3 velocity = _movement.normalized * _speed;
+                velocity.y = _rb.linearVelocity.y;
+                _rb.linearVelocity = velocity;
+            }
         }
     }
 
@@ -85,7 +105,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ThrowGrappin()
     {
-        _rb.MovePosition(_grappinHit);
+        _isGrappling = true;
         _grappinDirection = Vector3.zero;
     }
 }
