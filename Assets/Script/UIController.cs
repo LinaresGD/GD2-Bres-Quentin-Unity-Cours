@@ -4,13 +4,16 @@ using TMPro;
 
 public class UIController : MonoBehaviour
 {
+    [Header("UI References")]
     [SerializeField] private TMP_Text _crystalCountText;
     [SerializeField] private TMP_Text _timerText;
+    [SerializeField] private TMP_Text _objectiveText;
 
     private void Start()
     {
         UpdateCrystalCount(0, 3);
         UpdateTimer(60f);
+        HideObjectiveMessage();
     }
 
     public void UpdateCrystalCount(int current, int needed)
@@ -35,15 +38,46 @@ public class UIController : MonoBehaviour
         }
     }
 
+    public void ShowObjectiveMessage(string message)
+    {
+        if (_objectiveText != null)
+        {
+            _objectiveText.text = message;
+            _objectiveText.gameObject.SetActive(true);
+            Debug.Log($"[UIController] Message affiché : {message}");
+        }
+        else
+        {
+            Debug.LogError("[UIController] _objectiveText est null !");
+        }
+    }
+
+    public void HideObjectiveMessage()
+    {
+        if (_objectiveText != null)
+        {
+            _objectiveText.gameObject.SetActive(false);
+        }
+    }
+
     private void OnEnable()
     {
         Player_Collect.OnCrystalCountChanged += UpdateCrystalCount;
+        Player_Collect.OnKeyCollected += OnKeyCollected;
         GameTimer.OnTimerUpdate += UpdateTimer;
+        Debug.Log("[UIController] Événements souscrits");
     }
 
     private void OnDisable()
     {
         Player_Collect.OnCrystalCountChanged -= UpdateCrystalCount;
+        Player_Collect.OnKeyCollected -= OnKeyCollected;
         GameTimer.OnTimerUpdate -= UpdateTimer;
+    }
+
+    private void OnKeyCollected()
+    {
+        Debug.Log("[UIController] OnKeyCollected appelé !");
+        ShowObjectiveMessage("Trouve la boule de cristal et enfuis-toi !");
     }
 }
