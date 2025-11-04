@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
         _rb.linearDamping = 5f;
+        _rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
+        _rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
     void Update()
@@ -83,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void ThrowGrappin()
     {
-        transform.position = _grappinHit;
+        _rb.MovePosition(_grappinHit);
         _grappinDirection = Vector3.zero;
     }
 }
